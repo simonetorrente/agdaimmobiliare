@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container">
+    <h1 class="my-4">I Nostri Immobili</h1>
+    
+    <div class="row">
+        {% for immobile in immobili %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if immobile.foto %}
+                <img src="{{ immobile.foto.url }}" class="card-img-top" alt="{{ immobile.riferimento }}">
+                {% else %}
+                <img src="/static/images/placeholder.jpg" class="card-img-top" alt="No image available">
+                {% endif %}
+                
+                <div class="card-body">
+                    <h5 class="card-title">{{ immobile.get_tipo_display }} - {{ immobile.citta }}</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="badge bg-primary">€ {{ immobile.prezzo }}</span>
+                        <span class="badge bg-secondary">{{ immobile.metratura }} m²</span>
+                    </div>
+                    <p class="card-text">{{ immobile.descrizione|truncatewords:30 }}</p>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="badge bg-{% if immobile.situazione == IN_VENDITA %}success{% elif immobile.situazione == IN_AFFITTO %}info{% else %}warning{% endif %}">
+                            {{ immobile.situazione }}
+                        </span>
+                    </div>
+                    <a href="{% url 'immobile' immobile.riferimento %}" class="btn btn-primary mt-3">Vedi immobile</a>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12">
+            <p class="text-center">Nessun immobile disponibile al momento.</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

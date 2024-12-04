@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <h1>Agenti</h1>
+    <ul>
+        {% for agente in agenti %}
+            <li>
+                {{ agente.cf }}: {{ agente.telefono }} {{ agente.email }} {{agente.citta}}
+ </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
