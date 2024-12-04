@@ -1,9 +1,95 @@
 {% extends "base.html" %}
 
-{% block title %}
-    Home page
+{% block content %}
+<div class="container my-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/immobili">Immobili</a></li>
+            <li class="breadcrumb-item active">{{ immobile.riferimento }}</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <!-- Image Gallery Column -->
+        <div class="col-md-8 mb-4">
+            <div class="card">
+                {% if immobile.foto %}
+                <img src="{{ immobile.foto.url }}" class="card-img-top" alt="{{ immobile.riferimento }}">
+                {% else %}
+                <img src="/static/images/placeholder.jpg" class="card-img-top" alt="No image available">
+                {% endif %}
+                
+                {% if immobile.video %}
+                <div class="card-body">
+                    <video class="w-100" controls>
+                        <source src="{{ immobile.video.url }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Property Details Column -->
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-body">
+                    <h2 class="card-title">{{ immobile.get_tipo_display }}</h2>
+                    <h3 class="text-primary mb-4">€ {{ immobile.prezzo }}</h3>
+                    
+                    <div class="mb-4">
+                        <span class="badge bg-{% if immobile.situazione == 'In vendita' %}success{% elif immobile.situazione == 'In affitto' %}info{% else %}warning{% endif %} mb-2">
+                            {{ immobile.situazione }}
+                        </span>
+                        <p class="mb-1"><strong>Riferimento:</strong> {{ immobile.riferimento }}</p>
+                        <p class="mb-1"><strong>Città:</strong> {{ immobile.citta }}</p>
+                        <p class="mb-1"><strong>Indirizzo:</strong> {{ immobile.via }}, {{ immobile.civico }}</p>
+                        <p class="mb-1"><strong>Metratura:</strong> {{ immobile.metratura }} m²</p>
+                        <p class="mb-1"><strong>Stato:</strong> {{ immobile.stato }}</p>
+                    </div>
+
+                    {% if immobile.spese_amministrazione or immobile.spese_riscaldamento %}
+                    <div class="mb-4">
+                        <h5>Spese</h5>
+                        {% if immobile.spese_amministrazione %}
+                        <p class="mb-1"><strong>Amministrazione:</strong> € {{ immobile.spese_amministrazione }}/anno</p>
+                        {% endif %}
+                        {% if immobile.spese_riscaldamento %}
+                        <p class="mb-1"><strong>Riscaldamento:</strong> € {{ immobile.spese_riscaldamento }}/anno</p>
+                        {% endif %}
+                    </div>
+                    {% endif %}
+
+                    {% if immobile.fasce_visite %}
+                    <div class="mb-4">
+                        <h5>Orari Visite</h5>
+                        <p>{{ immobile.fasce_visite }}</p>
+                    </div>
+                    {% endif %}
+
+                    {% if immobile.agente %}
+                    <div class="mb-4">
+                        <h5>Agente di Riferimento</h5>
+                        <p class="mb-1"><strong>Email:</strong> {{ immobile.agente.email }}</p>
+                        <p class="mb-1"><strong>Telefono:</strong> {{ immobile.agente.telefono }}</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Description Section -->
+    <div class="row mt-4">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Descrizione</h4>
+                    <p class="card-text">{{ immobile.descrizione|linebreaks }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
-{% block content %}
-    <h1>This is the home page</h1>
-{% endblock %}
